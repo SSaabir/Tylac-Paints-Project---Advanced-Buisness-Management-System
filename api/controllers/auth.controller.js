@@ -19,3 +19,27 @@ try {
     next(error);
 }
 };
+
+export const signin = async (req, res, next) => {
+     const {email, password} = req.body;
+
+     if (!email || !password || email === '' || password === '') {
+        next(errorHandler(400, 'All Fields are Required'));
+     }
+
+     try {
+        const validUser = await User.findOne({email});
+
+        if (!validUser) {
+            next(errorHandler(404,'User Not Found!'));
+        }
+
+        const validPassword = bcryptjs.compareSync(password, validUser.password);
+
+        if (!validPassword) {
+            next(errorHandler(400, 'Invalid Password'));
+        }
+     } catch (error) {
+        next(error);
+     }
+};
