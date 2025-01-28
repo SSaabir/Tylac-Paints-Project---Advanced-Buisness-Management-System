@@ -54,7 +54,7 @@ userSchema.statics.signin = async function (email, password) {
   } 
 
   const user = await this.findOne({email});
-    
+    console.log(user.password);
     if (!user) {
         throw new Error('Incorrect Email');
     }

@@ -34,10 +34,6 @@ export const signin = async (req, res, next) => {
         const user = await User.signin(email, password);
         const token = createToken(user._id);
 
-            res.status(200).cookie('access_token', token, {
-                httpOnlly: true,
-            })
-            .json(rest);
      } catch (error) {
         next(error);
      }
