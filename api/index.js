@@ -6,21 +6,23 @@ import authRoutes from './routes/auth.route.js'
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO).then(
-    () => {console.log('MongoDB is Connected.');} 
-)
+//DB Connect
+mongoose.connect(process.env.MONGO).then(() => {
+//listens for requests
+    app.listen(3000, () => {
+    console.log('Server is running on prt 3000');
+    })
+})
 .catch((err) => {console.log(err);}
 );
 
+//express app
 const app = express();
+
+//middleware
 app.use(express.json());
-app.listen(3000, ()=>{
-    console.log('Server is running on prt 300');
-});
 
-app.use('/api/user', userRoutes);
-app.use('/api/auth', authRoutes);
-
+//middleware
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
@@ -30,3 +32,7 @@ app.use((err, req, res, next) => {
         message
     });
 })
+
+//routes
+app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
