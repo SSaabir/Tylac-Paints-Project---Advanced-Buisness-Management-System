@@ -6,10 +6,8 @@ import { Label } from 'flowbite-react'
 export default function SignIn() {
 
     const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(null);
     const navigate = useNavigate();
-  
+
     const HandleChange = (e) => {
       setFormData({...formData, [e.target.id]: e.target.value.trim()});
     };

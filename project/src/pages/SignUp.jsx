@@ -2,12 +2,12 @@ import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
 import React, {useState} from 'react'
 import {Link, useNavigate } from 'react-router-dom'
 import { Label } from 'flowbite-react'
+import { useSignup } from '../hooks/useSignup'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {signup, loading, error} = useSignup();
 
   const HandleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value.trim()});
@@ -15,28 +15,10 @@ export default function SignUp() {
   const HandleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all fields');
+      throw new Error("All Fields are Required");
+      
     }
-    try {
-      setLoading(true);
-      setErrorMessage(null);
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {'Content-type': 'application/json'},
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data.success == false) {
-        return setErrorMessage(data.message);
-      }
-      setLoading(false);
-      if (res.ok) {
-        navigate('/signin');
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
-    }
+    await signup(formData);
   }
 
   return (
@@ -86,9 +68,9 @@ export default function SignUp() {
             <Link to='/signin' className='text-blue-400'>Sign In</Link>
           </div>
           {
-            errorMessage && (
+            error && (
               <Alert className='mt-5' color='failure'>
-                {errorMessage}
+                {error}
               </Alert>
             )
           }
