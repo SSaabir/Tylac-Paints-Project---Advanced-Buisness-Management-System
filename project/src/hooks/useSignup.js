@@ -1,8 +1,6 @@
 import {useAuthContext} from './useAuthContext'
 import { useState } from "react";
 
-import React from 'react'
-
 export const useSignup = () => {
 
     const [loading, setLoading] = useState(false);

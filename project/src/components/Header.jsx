@@ -3,10 +3,17 @@ import { Link, useLocation } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon } from 'react-icons/fa'
 import React from 'react'
+import { useLogout } from '../hooks/useLogout'
 
 export default function Header() {
     const path= useLocation().pathname;
-  return ( 
+    const {logout} = useLogout();
+
+    const handleClick = () => {
+        logout();
+    }
+
+    return ( 
     <Navbar className='border-b-2'>
     <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
     <span>Tylac</span>
@@ -18,6 +25,8 @@ export default function Header() {
         rightIcon={AiOutlineSearch}
         className='hidden lg:inline'/>
     </form>
+    <Button color='teal' onClick={handleClick}>Logout</Button>
+     
     <Button className='w-12 h-10 lg:hidden' color='gray' pill>
         <AiOutlineSearch/>
     </Button>
@@ -28,7 +37,7 @@ export default function Header() {
         <Link to='/signin'>
         <Button color='teal'>Sign In</Button>
         </Link>
-        <Navbar.Toggle/>
+           <Navbar.Toggle/>
     </div>
         <Navbar.Collapse>
             <Navbar.Link active={path=="/"} as={'div'}>
