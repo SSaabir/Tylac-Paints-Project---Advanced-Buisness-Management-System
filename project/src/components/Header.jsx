@@ -4,11 +4,12 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon } from 'react-icons/fa'
 import React from 'react'
 import { useLogout } from '../hooks/useLogout'
+import { useAuthContext } from '../hooks/useAuthContext'
 
 export default function Header() {
     const path= useLocation().pathname;
     const {logout} = useLogout();
-
+    const {user} = useAuthContext();
     const handleClick = () => {
         logout();
     }
@@ -18,25 +19,23 @@ export default function Header() {
     <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
     <span>Tylac</span>
     </Link>
-    <form>
-        <TextInput
-        type='text'
-        placeholder='Search..'
-        rightIcon={AiOutlineSearch}
-        className='hidden lg:inline'/>
-    </form>
-    <Button color='teal' onClick={handleClick}>Logout</Button>
-     
+  
     <Button className='w-12 h-10 lg:hidden' color='gray' pill>
         <AiOutlineSearch/>
     </Button>
+  
     <div className='flex gap-2 md:order-2'>
         <Button className='w-12 h-10 hidden sm:inline' color='gray' pill>
             <FaMoon/>
         </Button>
+        {!user && (
         <Link to='/signin'>
         <Button color='teal'>Sign In</Button>
         </Link>
+    )}
+     {user && (
+    <Button color='teal' onClick={handleClick}>Logout</Button>
+)}
            <Navbar.Toggle/>
     </div>
         <Navbar.Collapse>

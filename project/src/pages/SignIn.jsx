@@ -2,12 +2,13 @@ import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
 import React, {useState} from 'react'
 import {Link, useNavigate } from 'react-router-dom'
 import { Label } from 'flowbite-react'
+import { useSignin } from '../hooks/useSignin';
 
 export default function SignIn() {
 
     const [formData, setFormData] = useState({});
     const navigate = useNavigate();
-
+    const {signin, loading, error} = useSignin();
     const HandleChange = (e) => {
       setFormData({...formData, [e.target.id]: e.target.value.trim()});
     };
@@ -17,27 +18,7 @@ export default function SignIn() {
       if (!formData.email || !formData.password) {
         return setErrorMessage('Please fill out all fields');
       }
-      console.log(formData.email,formData.password)
-
-      try {
-        const res = await fetch('/api/auth/signin', {
-          method: 'POST',
-          headers: {'Content-type': 'application/json'},
-          body: JSON.stringify(formData),
-        });
-        const data = await res.json();
-        if (data.success == false) {
-          
-        }
-        if (res.ok) {
-          
-          navigate('/');
-        }
-      } catch (error) {
-        
-      }
-    
-   
+     await signin(formData);
 }
   return (
     <div className='min-h-screen mt-20'>
@@ -81,9 +62,9 @@ export default function SignIn() {
             <Link to='/signup' className='text-blue-400'>Sign Up</Link>
           </div>
           {
-            errorMessage && (
+            error && (
               <Alert className='mt-5' color='failure'>
-                {errorMessage}
+                {error}
               </Alert>
             )
           }

@@ -34,7 +34,8 @@ export const signin = async (req, res, next) => {
         const user = await User.signin(email, password);
         const token = createToken(user._id);
 
+        res.status(200).json({email, token});
      } catch (error) {
-        next(error);
-     }
+      res.status(400).json({error: error.message})
+   }
 };
