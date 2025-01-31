@@ -10,6 +10,10 @@ import Footer from './components/Footer'
 import Colours from './pages/Colours'
 import ContactUs from './pages/ContactUs'
 import Product from './pages/Product'
+import Checkout from './pages/Checkout'
+import Instruction from './pages/Instruction'
+import FAQ from './pages/FAQ'
+import Terms from './pages/Terms'
 
 export default function App() {
   return (
@@ -22,8 +26,14 @@ export default function App() {
       <Route path="/contactus" element={<ContactUs />}/>
       <Route path="/product" element={<Product />}/>
       <Route path="/dashboard" element={<Dashboard />}/>
+      <Route path="/checkout" element={<Checkout />}/>
       <Route path="/signin" element={<SignIn />}/>
       <Route path="/signup" element={<SignUp />}/>
+      <Route path="/instruction" element={<Instruction />}/>
+      <Route path="/faq" element={<FAQ />}/>
+      <Route path="/terms" element={<Terms />}/>
+      
+      
     </Routes>
     <Footer/>
     </BrowserRouter>

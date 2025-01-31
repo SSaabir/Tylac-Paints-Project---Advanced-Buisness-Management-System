@@ -5,11 +5,16 @@ import { FaMoon } from 'react-icons/fa';
 import React from 'react';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
+import CartSidebar from '../components/CartSidebar';
+import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 
 export default function Header() {
   const path = useLocation().pathname;
   const { logout } = useLogout();
   const { user } = useAuthContext();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cart } = useCart();
 
   const handleClick = () => {
     logout();
@@ -48,6 +53,12 @@ export default function Header() {
           </Link>
         )}
 
+<div className="flex md:order-2">
+          <Button onClick={() => setIsCartOpen(!isCartOpen)}>
+            Cart ({cart.items.length})
+          </Button>
+        </div>
+
         {/* User Dropdown */}
         {user && (
           <Dropdown
@@ -77,6 +88,8 @@ export default function Header() {
         )}
       </div>
 
+      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
       {/* Navbar Links */}
       <Navbar.Collapse>
         <Navbar.Link active={path === '/'} as={'div'}>
@@ -90,6 +103,9 @@ export default function Header() {
         </Navbar.Link>
         <Navbar.Link active={path === '/product'} as={'div'}>
           <Link to='/product'>Product</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === '/instruction'} as={'div'}>
+          <Link to='/instruction'>Instruction</Link>
         </Navbar.Link>
         <Navbar.Link active={path === '/contactus'} as={'div'}>
           <Link to='/contactus'>Contact Us</Link>
