@@ -1,10 +1,12 @@
 import { useAuthContext } from "./useAuthContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const useSignin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null); // ✅ Renamed for consistency
   const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
 
   const signin = async (formData) => {
     setLoading(true);
@@ -36,6 +38,7 @@ export const useSignin = () => {
       dispatch({ type: 'LOGIN', payload: json });
 
       setLoading(false);
+      navigate('/dashboard');
     } catch (err) {
       setLoading(false);
       setError(err.message || "Network error. Please try again."); // ✅ Improved error handling

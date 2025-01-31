@@ -1,13 +1,12 @@
 import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
 import React, {useState} from 'react'
-import {Link, useNavigate } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import { Label } from 'flowbite-react'
 import { useSignin } from '../hooks/useSignin';
 
 export default function SignIn() {
 
     const [formData, setFormData] = useState({});
-    const navigate = useNavigate();
     const {signin, loading, error} = useSignin();
     const HandleChange = (e) => {
       setFormData({...formData, [e.target.id]: e.target.value.trim()});

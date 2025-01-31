@@ -1,8 +1,9 @@
 import {useAuthContext} from './useAuthContext'
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export const useSignup = () => {
-
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setErrorMessage] = useState(null);
     const {dispatch} = useAuthContext();
@@ -33,6 +34,7 @@ export const useSignup = () => {
             localStorage.setItem('user', JSON.stringify(json));
             dispatch({ type: 'LOGIN', payload: json });
             setLoading(false);
+            navigate('/dashboard');
           } catch (error) {
             throw new Error("Invalid JSON response from server");
           }
