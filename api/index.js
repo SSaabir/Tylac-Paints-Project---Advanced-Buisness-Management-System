@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import userRoutes from './routes/user.route.js';
+import custRoutes from './routes/customer.route.js';
 import authRoutes from './routes/auth.route.js';
 
 dotenv.config();
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 // ✅ Routes
-app.use('/api/user', userRoutes);
+app.use('/api/cust', custRoutes);
 app.use('/api/auth', authRoutes);
 
 // ✅ Error handling middleware (should be last)

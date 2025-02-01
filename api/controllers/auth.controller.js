@@ -1,27 +1,7 @@
-import User from '../models/user.model.js'
-import bcryptjs from 'bcryptjs';
+import Customer from '../models/customer.model.js'
+import Admin from '../models/admin.model.js'
 import { errorHandler } from '../utils/error.js';
 import createToken from '../utils/token.js';
-
-{/*
-export const signup = async(req, res, next) =>{
-    const {username, email, password} = req.body;
-
-    if (!username || !email || !password || password==='' || username==='' || email===''){
-      next(errorHandler(400, 'All Fields are Required'));
-} 
-const hashPassword = bcryptjs.hashSync(password, 10);
-const newUser =new User({username, email, password: hashPassword});
-
-try {
-    await newUser.save();
-    res.json({message: 'signup successfull'});
-    
-} catch (error) {
-    next(error);
-}
-};
-*/}
 
 export const signin = async (req, res, next) => {
      const {email, password} = req.body;
@@ -31,10 +11,19 @@ export const signin = async (req, res, next) => {
      }
 
      try {
-        const user = await User.signin(email, password);
+      let user, role;
+      if(email.match(/^[a-zA-Z0-9._%+-]+@admin\.tylac\.lk$/)){
+         user = await Admin.signin(email, password);
+         console.log('Email is valid for admin domain');
+         role = 'Admin';
+      } else {
+        user = await Customer.signin(email, password);
+        console.log('Email is valid for customer domain');
+        role = 'Customer';
+      }
         const token = createToken(user._id);
 
-        res.status(200).json({email, token});
+        res.status(200).json({role, email, token});
      } catch (error) {
       res.status(400).json({error: error.message})
    }

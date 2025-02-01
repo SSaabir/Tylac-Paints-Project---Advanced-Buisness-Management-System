@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Button } from 'flowbite-react';
+import { Navbar, Button, TextInput, Textarea } from 'flowbite-react';
 import { HiArrowRight } from 'react-icons/hi';
 
 export default function Home () {
@@ -85,6 +85,46 @@ export default function Home () {
           <Button gradientDuoTone="cyanToBlue" pill size="lg">
             Shop Now
           </Button>
+        </div>
+      </section>
+
+      {/* Feedback Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            We'd Love to Hear From You
+          </h2>
+          <form className="max-w-2xl mx-auto">
+            <div className="mb-6">
+              <TextInput
+                id="name"
+                type="text"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+            <div className="mb-6">
+              <TextInput
+                id="email"
+                type="email"
+                placeholder="Your Email"
+                required
+              />
+            </div>
+            <div className="mb-6">
+              <Textarea
+                id="feedback"
+                placeholder="Your Feedback"
+                rows={5}
+                required
+              />
+            </div>
+            <div className="text-center">
+              <Button gradientDuoTone="cyanToBlue" pill size="lg" type="submit">
+                Submit Feedback
+              </Button>
+            </div>
+          </form>
         </div>
       </section>
     </div>

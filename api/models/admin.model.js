@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
 import validator from 'validator';
 
 
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -11,10 +11,18 @@ const userSchema = new mongoose.Schema({
 
     },
     email: {
+        default:'',
         type: String,
         required: true,
         unique: true,
+        validate: {
+            validator: function () {
+                // Custom validation to ensure email ends with "@admin.tylac.lk"
+                return /^[a-zA-Z0-9._%+-]+@admin\.tylac\.lk$/.test(value);
+            },
+            message: props => `${props.value} is not a valid admin email! Email must end with "@admin.tylac.lk".`,
     },
+},
     password: {
         type: String,
         required: true,
@@ -22,7 +30,7 @@ const userSchema = new mongoose.Schema({
 },{timestamps: true}
 );
 
-userSchema.statics.signup = async function (username, email, password) {
+adminSchema.statics.signup = async function (username, email, password) {
     //validator
     if (!username || !email || !password || password==='' || username==='' || email===''){
             throw new Error("All Fields are Required");
@@ -44,32 +52,33 @@ userSchema.statics.signup = async function (username, email, password) {
 
     const hashPassword = bcryptjs.hashSync(password, 10);
 
-    const user = await this.create({username, email, password: hashPassword})    
-    return user
+    const admin = await this.create({username, email, password: hashPassword})    
+    return admin
 }
 
-userSchema.statics.signin = async function (email, password) {
+adminSchema.statics.signin = async function (email, password) {
 
     if (!email || !password || password==='' || email===''){
         throw new Error("All Fields are Required");
   } 
 
-  const user = await this.findOne({email});
+  const admin = await this.findOne({email});
 
-    if (!user) {
+    if (!admin) {
         throw new Error('Incorrect Email');
     }
 
-    const match = await bcryptjs.compare(password, user.password);
+    const match = await bcryptjs.compare(password, admin.password);
 
     if(!match){
+        
         throw new Error('Incorrect Password');
 
     }
-    return user;
+    return admin;
 
 }
 
-const user = mongoose.model('User', userSchema);
+const admin = mongoose.model('Admin', adminSchema);
 
-export default user;
+export default admin;

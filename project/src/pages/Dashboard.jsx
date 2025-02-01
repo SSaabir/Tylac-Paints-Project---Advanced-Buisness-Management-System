@@ -1,8 +1,10 @@
 import React from 'react';
 import { Sidebar, Navbar, Card, Button } from 'flowbite-react';
 import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiShoppingBag, HiArrowSmRight, HiTable } from 'react-icons/hi';
-
+import { useAuthContext } from '../hooks/useAuthContext';
 export default function Dashboard () {
+  const {user} = useAuthContext();
+  const role = user?.role || 'Guest';;
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -15,9 +17,11 @@ export default function Dashboard () {
             <Sidebar.Item href="#" icon={HiChartPie}>
               Dashboard
             </Sidebar.Item>
+            {role=='Admin'&&(
             <Sidebar.Item href="#" icon={HiViewBoards}>
               Projects
             </Sidebar.Item>
+            )}
             <Sidebar.Item href="#" icon={HiInbox}>
               Inbox
             </Sidebar.Item>
