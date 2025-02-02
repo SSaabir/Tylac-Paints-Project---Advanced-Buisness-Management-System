@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar, Button, TextInput, Textarea } from 'flowbite-react';
 import { HiArrowRight } from 'react-icons/hi';
-
+import { FaStar } from 'react-icons/fa';
 export default function Home () {
+  const [feedbacks, setFeedbacks] = useState([
+    { name: "John Doe", email: "john@example.com", feedback: "Great paint! It lasted through a heavy storm.", rating: 5 },
+    { name: "Jane Smith", email: "jane@example.com", feedback: "The colors are very vibrant, love it!", rating: 4 },
+    { name: "Michael Brown", email: "michael@example.com", feedback: "Eco-friendly and easy to apply.", rating: 5 }
+  ]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [rating, setRating] = useState(0);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newFeedback = { name, email, feedback, rating };
+    setFeedbacks([...feedbacks, newFeedback]);
+    setName('');
+    setEmail('');
+    setFeedback('');
+    setRating(0);
+  };
   return (
     <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
@@ -88,36 +107,50 @@ export default function Home () {
         </div>
       </section>
 
-      {/* Feedback Section */}
+      {/* Feedbacks Display Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            Customer Feedbacks
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {feedbacks.map((fb, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{fb.name}</h3>
+                <p className="text-gray-600 mb-2">{fb.email}</p>
+                <div className="flex mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className={i < fb.rating ? "text-yellow-400" : "text-gray-300"} />
+                  ))}
+                </div>
+                <p className="text-gray-600">{fb.feedback}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Feedback Form Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
             We'd Love to Hear From You
           </h2>
-          <form className="max-w-2xl mx-auto">
+          <form className="max-w-2xl mx-auto" onSubmit={handleSubmit}>
             <div className="mb-6">
-              <TextInput
-                id="name"
-                type="text"
-                placeholder="Your Name"
-                required
-              />
+              <TextInput id="name" type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="mb-6">
-              <TextInput
-                id="email"
-                type="email"
-                placeholder="Your Email"
-                required
-              />
+              <TextInput id="email" type="email" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="mb-6">
-              <Textarea
-                id="feedback"
-                placeholder="Your Feedback"
-                rows={5}
-                required
-              />
+              <Textarea id="feedback" placeholder="Your Feedback" rows={5} value={feedback} onChange={(e) => setFeedback(e.target.value)} required />
+            </div>
+            {/* Star Rating */}
+            <div className="mb-6 flex justify-center">
+              {[...Array(5)].map((_, i) => (
+                <FaStar key={i} className={i < rating ? "text-yellow-400 cursor-pointer" : "text-gray-300 cursor-pointer"} onClick={() => setRating(i + 1)} />
+              ))}
             </div>
             <div className="text-center">
               <Button gradientDuoTone="cyanToBlue" pill size="lg" type="submit">

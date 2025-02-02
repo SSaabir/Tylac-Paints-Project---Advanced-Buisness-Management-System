@@ -2,6 +2,7 @@ import Customer from '../models/customer.model.js'
 import Admin from '../models/admin.model.js'
 import { errorHandler } from '../utils/error.js';
 import createToken from '../utils/token.js';
+import Employee from '../models/employee.model.js';
 
 export const signin = async (req, res, next) => {
      const {email, password} = req.body;
@@ -16,6 +17,10 @@ export const signin = async (req, res, next) => {
          user = await Admin.signin(email, password);
          console.log('Email is valid for admin domain');
          role = 'Admin';
+      } else if (email.match(/^[a-zA-Z0-9._%+-]+@employee\.tylac\.lk$/)){
+         user = await Employee.signin(email, password);
+         console.log('Email is valid for employee domain');
+         role = 'Employee';
       } else {
         user = await Customer.signin(email, password);
         console.log('Email is valid for customer domain');

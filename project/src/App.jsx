@@ -14,6 +14,7 @@ import Checkout from './pages/Checkout'
 import Instruction from './pages/Instruction'
 import FAQ from './pages/FAQ'
 import Terms from './pages/Terms'
+import Profile from './pages/profile'
 
 export default function App() {
   return (
@@ -32,6 +33,8 @@ export default function App() {
       <Route path="/instruction" element={<Instruction />}/>
       <Route path="/faq" element={<FAQ />}/>
       <Route path="/terms" element={<Terms />}/>
+      <Route path="/profile" element={<Profile />}/>
+      
       
       
     </Routes>
