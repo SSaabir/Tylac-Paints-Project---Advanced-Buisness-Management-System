@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Table } from 'flowbite-react';
+import { DashboardSidebar } from '../components/DashboardSidebar'; // Assuming you have a DashboardSidebar component
 
 const messages = [
   { id: 1, sender: 'John Doe', subject: 'Meeting Reminder', date: '2023-10-10' },
@@ -9,31 +10,40 @@ const messages = [
 
 export default function InboxD() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Inbox</h1>
-      <Table hoverable>
-        <Table.Head>
-          <Table.HeadCell>ID</Table.HeadCell>
-          <Table.HeadCell>Sender</Table.HeadCell>
-          <Table.HeadCell>Subject</Table.HeadCell>
-          <Table.HeadCell>Date</Table.HeadCell>
-          <Table.HeadCell>Actions</Table.HeadCell>
-        </Table.Head>
-        <Table.Body>
-          {messages.map((message) => (
-            <Table.Row key={message.id}>
-              <Table.Cell>{message.id}</Table.Cell>
-              <Table.Cell>{message.sender}</Table.Cell>
-              <Table.Cell>{message.subject}</Table.Cell>
-              <Table.Cell>{message.date}</Table.Cell>
-              <Table.Cell>
-                <Button size="xs" className="mr-2">Reply</Button>
-                <Button size="xs" color="failure">Delete</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+    <div className='flex min-h-screen'>
+      {/* Sidebar */}
+      <DashboardSidebar />
+
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+        {/* Header */}
+        <h1 className="text-2xl font-bold mb-4">Inbox</h1>
+
+        {/* Messages Table */}
+        <Table hoverable>
+          <Table.Head>
+            <Table.HeadCell>ID</Table.HeadCell>
+            <Table.HeadCell>Sender</Table.HeadCell>
+            <Table.HeadCell>Subject</Table.HeadCell>
+            <Table.HeadCell>Date</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {messages.map((message) => (
+              <Table.Row key={message.id}>
+                <Table.Cell>{message.id}</Table.Cell>
+                <Table.Cell>{message.sender}</Table.Cell>
+                <Table.Cell>{message.subject}</Table.Cell>
+                <Table.Cell>{message.date}</Table.Cell>
+                <Table.Cell>
+                  <Button size="xs" className="mr-2">Reply</Button>
+                  <Button size="xs" color="failure">Delete</Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
     </div>
   );
 }

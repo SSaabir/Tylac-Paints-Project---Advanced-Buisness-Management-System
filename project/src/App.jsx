@@ -15,6 +15,10 @@ import Instruction from './pages/Instruction'
 import FAQ from './pages/FAQ'
 import Terms from './pages/Terms'
 import Profile from './pages/profile'
+import InboxD from './pages/InboxD'
+import ProductD from './pages/ProductD'
+import ProjectD from './pages/ProjectD'
+import UserD from './pages/UserD'
 
 export default function App() {
   return (
@@ -34,7 +38,10 @@ export default function App() {
       <Route path="/faq" element={<FAQ />}/>
       <Route path="/terms" element={<Terms />}/>
       <Route path="/profile" element={<Profile />}/>
-      
+      <Route path="/inboxd" element={<InboxD />}/>
+      <Route path="/productd" element={<ProductD />}/>
+      <Route path="/projectd" element={<ProjectD />}/>      
+      <Route path="/userd" element={<UserD />}/>
       
       
     </Routes>

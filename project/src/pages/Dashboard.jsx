@@ -1,46 +1,13 @@
 import React from 'react';
-import { Sidebar, Navbar, Card, Button } from 'flowbite-react';
-import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiShoppingBag, HiArrowSmRight, HiTable } from 'react-icons/hi';
+import { Navbar, Card, Button } from 'flowbite-react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { DashboardSidebar } from '../components/DashboardSidebar';
 export default function Dashboard () {
   const {user} = useAuthContext();
-  const role = user?.role || 'Guest';;
+  const role = user?.role || 'Guest';
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar aria-label="Sidebar">
-        <Sidebar.Logo href="#" img="https://flowbite.com/docs/images/logo.svg" imgAlt="Flowbite logo">
-          Dashboard
-        </Sidebar.Logo>
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={HiChartPie}>
-              Dashboard
-            </Sidebar.Item>
-            {role=='Admin'&&(
-            <Sidebar.Item href="#" icon={HiViewBoards}>
-              Projects
-            </Sidebar.Item>
-            )}
-            <Sidebar.Item href="#" icon={HiInbox}>
-              Inbox
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiUser}>
-              Users
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiShoppingBag}>
-              Products
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiArrowSmRight}>
-              Sign In
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiTable}>
-              Sign Up
-            </Sidebar.Item>
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
-      </Sidebar>
-
+      <DashboardSidebar />
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation */}
