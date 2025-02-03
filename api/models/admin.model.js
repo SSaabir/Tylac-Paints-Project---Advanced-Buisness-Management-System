@@ -1,84 +1,125 @@
 import mongoose from "mongoose";
-import bcryptjs from 'bcryptjs';
-import validator from 'validator';
+import bcryptjs from "bcryptjs";
+import validator from "validator";
 
-
-const adminSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema(
+  {
     username: {
-        type: String,
-        required: true,
-        unique: true,
-
+      type: String,
+      required: true,
+      unique: true,
     },
     email: {
-        default:'',
-        type: String,
-        required: true,
-        unique: true,
-        validate: {
-            validator: function () {
-                // Custom validation to ensure email ends with "@admin.tylac.lk"
-                return /^[a-zA-Z0-9._%+-]+@admin\.tylac\.lk$/.test(value);
-            },
-            message: props => `${props.value} is not a valid admin email! Email must end with "@admin.tylac.lk".`,
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9._%+-]+@admin\.tylac\.lk$/.test(value);
+        },
+        message: (props) =>
+          `${props.value} is not a valid admin email! Email must end with "@admin.tylac.lk".`,
+      },
     },
-},
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (value) {
+          return validator.isMobilePhone(value, "any", { strictMode: false });
+        },
+        message: (props) => `${props.value} is not a valid phone number!`,
+      },
+    },
+    image: {
+      type: String,
+      default: "https://example.com/default-profile.png", // Default image URL
+      validate: {
+        validator: function (value) {
+          return validator.isURL(value);
+        },
+        message: (props) => `${props.value} is not a valid image URL!`,
+      },
+    },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
-},{timestamps: true}
+  },
+  { timestamps: true }
 );
 
-adminSchema.statics.signup = async function (username, email, password) {
-    //validator
-    if (!username || !email || !password || password==='' || username==='' || email===''){
-            throw new Error("All Fields are Required");
-      } 
+// Signup method
+adminSchema.statics.signup = async function (username, email, phone, password, image) {
+  // Validate fields
+  if (!username || !email || !phone || !password) {
+    throw new Error("All fields are required");
+  }
 
-      if (!validator.isEmail(email)) {
-        throw new Error("Email is Not Valid");
-      }
+  if (!validator.isEmail(email)) {
+    throw new Error("Email is not valid");
+  }
 
-      if(!validator.isStrongPassword(password)){
-        throw new Error("Password is Not Strong Enough");
-      }
+  if (!validator.isMobilePhone(phone, "any", { strictMode: false })) {
+    throw new Error("Phone number is not valid");
+  }
 
-    const exists = await this.findOne({email});
-    
-    if (exists) {
-        throw new Error('Email Already Exists');
-    }
+  if (!validator.isStrongPassword(password)) {
+    throw new Error("Password is not strong enough");
+  }
 
-    const hashPassword = bcryptjs.hashSync(password, 10);
+  if (image && !validator.isURL(image)) {
+    throw new Error("Invalid image URL");
+  }
 
-    const admin = await this.create({username, email, password: hashPassword})    
-    return admin
-}
+  // Check if email or phone already exists
+  const emailExists = await this.findOne({ email });
+  if (emailExists) {
+    throw new Error("Email already exists");
+  }
 
+  const phoneExists = await this.findOne({ phone });
+  if (phoneExists) {
+    throw new Error("Phone number already exists");
+  }
+
+  // Hash the password
+  const hashedPassword = bcryptjs.hashSync(password, 10);
+
+  // Create and return the admin
+  const admin = await this.create({
+    username,
+    email,
+    phone,
+    password: hashedPassword,
+    image: image || "https://example.com/default-profile.png", // Use provided image or default
+  });
+
+  return admin;
+};
+
+// Signin method
 adminSchema.statics.signin = async function (email, password) {
+  if (!email || !password) {
+    throw new Error("All fields are required");
+  }
 
-    if (!email || !password || password==='' || email===''){
-        throw new Error("All Fields are Required");
-  } 
+  const admin = await this.findOne({ email });
 
-  const admin = await this.findOne({email});
+  if (!admin) {
+    throw new Error("Incorrect email");
+  }
 
-    if (!admin) {
-        throw new Error('Incorrect Email');
-    }
+  const match = await bcryptjs.compare(password, admin.password);
 
-    const match = await bcryptjs.compare(password, admin.password);
+  if (!match) {
+    throw new Error("Incorrect password");
+  }
 
-    if(!match){
-        
-        throw new Error('Incorrect Password');
+  return admin;
+};
 
-    }
-    return admin;
+const Admin = mongoose.model("Admin", adminSchema);
 
-}
-
-const admin = mongoose.model('Admin', adminSchema);
-
-export default admin;
+export default Admin;

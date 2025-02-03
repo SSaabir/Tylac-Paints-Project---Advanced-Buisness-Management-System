@@ -15,11 +15,31 @@ const employeeSchema = new mongoose.Schema(
       unique: true,
       validate: {
         validator: function (value) {
-          // Custom validation to ensure email ends with "@tylac.lk"
           return /^[a-zA-Z0-9._%+-]+@employee\.tylac\.lk$/.test(value);
         },
         message: (props) =>
           `${props.value} is not a valid employee email! Email must end with "@employee.tylac.lk".`,
+      },
+    },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (value) {
+          return validator.isMobilePhone(value, "any", { strictMode: false });
+        },
+        message: (props) => `${props.value} is not a valid phone number!`,
+      },
+    },
+    image: {
+      type: String,
+      default: "https://example.com/default-profile.png", // Default image URL
+      validate: {
+        validator: function (value) {
+          return validator.isURL(value);
+        },
+        message: (props) => `${props.value} is not a valid image URL!`,
       },
     },
     password: {
@@ -31,9 +51,9 @@ const employeeSchema = new mongoose.Schema(
 );
 
 // Signup method
-employeeSchema.statics.signup = async function (username, email, password) {
+employeeSchema.statics.signup = async function (username, email, phone, password, image) {
   // Validate fields
-  if (!username || !email || !password) {
+  if (!username || !email || !phone || !password) {
     throw new Error("All fields are required");
   }
 
@@ -41,15 +61,27 @@ employeeSchema.statics.signup = async function (username, email, password) {
     throw new Error("Email is not valid");
   }
 
+  if (!validator.isMobilePhone(phone, "any", { strictMode: false })) {
+    throw new Error("Phone number is not valid");
+  }
+
   if (!validator.isStrongPassword(password)) {
     throw new Error("Password is not strong enough");
   }
 
-  // Check if email already exists
-  const exists = await this.findOne({ email });
+  if (image && !validator.isURL(image)) {
+    throw new Error("Invalid image URL");
+  }
 
-  if (exists) {
+  // Check if email or phone already exists
+  const emailExists = await this.findOne({ email });
+  if (emailExists) {
     throw new Error("Email already exists");
+  }
+
+  const phoneExists = await this.findOne({ phone });
+  if (phoneExists) {
+    throw new Error("Phone number already exists");
   }
 
   // Hash the password
@@ -59,7 +91,9 @@ employeeSchema.statics.signup = async function (username, email, password) {
   const employee = await this.create({
     username,
     email,
+    phone,
     password: hashedPassword,
+    image: image || "https://example.com/default-profile.png", // Use provided image or default
   });
 
   return employee;
