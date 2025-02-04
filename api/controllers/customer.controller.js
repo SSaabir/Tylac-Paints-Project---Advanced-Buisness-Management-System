@@ -67,7 +67,8 @@ export const updateCustomer = async (req, res, next) => {
 
 // Signup customer
 export const signupC = async (req, res, next) => {
-    const { firstName, lastName, email, phoneNumber, password, address, image, dob } = req.body;
+    const { firstName, lastName, email, phoneNumber, password, address, dob } = req.body;
+    const image = req.file ? req.file.path : null; // ⬅️ Handle uploaded file
 
     if (!firstName || !lastName || !email || !phoneNumber || !password || !address || !dob) {
         return next(errorHandler(400, 'All Fields are Required'));
@@ -76,8 +77,9 @@ export const signupC = async (req, res, next) => {
     try {
         const customer = await Customer.signup(firstName, lastName, email, phoneNumber, password, address, image, dob);
         const token = createToken(customer._id);
-        res.status(200).json({ email, token });
+        res.status(200).json({ email, token, image}); // ⬅️ Include image in response
     } catch (error) {
         next(errorHandler(400, error.message));
     }
 };
+

@@ -12,7 +12,7 @@ export const signin = async (req, res, next) => {
      }
 
      try {
-      let user, role;
+      let user, role, name;
       if(email.match(/^[a-zA-Z0-9._%+-]+@admin\.tylac\.lk$/)){
          user = await Admin.signin(email, password);
          console.log('Email is valid for admin domain');
@@ -24,11 +24,13 @@ export const signin = async (req, res, next) => {
       } else {
         user = await Customer.signin(email, password);
         console.log('Email is valid for customer domain');
+         name = user.firstName +' '+ user.lastName;
         role = 'Customer';
       }
         const token = createToken(user._id);
-
-        res.status(200).json({role, email, token});
+        const image = user.image;
+        
+        res.status(200).json({role, email, token, image, name});
      } catch (error) {
       res.status(400).json({error: error.message})
    }

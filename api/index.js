@@ -10,16 +10,37 @@ import feedRoutes from './routes/feedback.route.js';
 import payRoutes from './routes/payment.route.js';
 import proRoutes from './routes/product.route.js';
 import saleRoutes from './routes/sale.route.js';
-
-
+import multer from 'multer';
+import path from 'path';
 
 dotenv.config();
 
-// ✅ Initialize Express first
+// ✅ Initialize Express
 const app = express();
 
 // ✅ Middleware (before routes)
 app.use(express.json());
+
+// ✅ Multer Configuration for File Uploads
+const storage = multer.diskStorage({
+    destination: './uploads/', // Directory where files will be stored
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+    }
+});
+
+const upload = multer({ storage });
+
+// ✅ Route to Handle File Upload
+app.post('/api/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+    res.status(200).json({ success: true, filePath: `/uploads/${req.file.filename}` });
+});
+
+// ✅ Serve Uploaded Files Statically
+app.use('/uploads', express.static('uploads'));
 
 // Default route for homepage
 app.get('/', (req, res) => {
@@ -33,10 +54,9 @@ app.use('/api/adm', admRoutes);
 app.use('/api/emp', empRoutes);
 app.use('/api/enq', enqRoutes);
 app.use('/api/feed', feedRoutes);
-app.use('/api/pay',payRoutes);
-app.use('/api/pro',proRoutes);
-app.use('/api/sale',saleRoutes);
-
+app.use('/api/pay', payRoutes);
+app.use('/api/pro', proRoutes);
+app.use('/api/sale', saleRoutes);
 
 // ✅ Error handling middleware (should be last)
 app.use((err, req, res, next) => {

@@ -65,15 +65,15 @@ export default function Header() {
             arrowIcon={false}
             inline
             label={
-              <Avatar
-                alt="User"
-                img={user.photoURL || 'https://via.placeholder.com/150'} // Default avatar if no photoURL
-                rounded
-              />
+              <Avatar 
+  alt="User" 
+  img={user?.image ? `http://localhost:3000/${user.image}` : 'https://via.placeholder.com/150'} 
+  rounded 
+/>
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm font-semibold">{user.displayName || 'User'}</span>
+              <span className="block text-sm font-semibold">{user.name || 'User'}</span>
               <span className="block text-sm text-gray-500 truncate">{user.email}</span>
             </Dropdown.Header>
             <Dropdown.Item>
